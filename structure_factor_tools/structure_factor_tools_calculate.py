@@ -25,8 +25,9 @@ class StructureFactorSimulation():
         Returns:
         lattice_data (pandas DataFrame)- DataFrame contain all the data, can read to ensure data has been input correctly.
         '''
-        if lattice[:-4] == '.csv':
+        if lattice[-4:] == '.csv':
             #Read .csv with pandas then store locations and atomic scattering factors in seperate arrays:
+            self.name = lattice[:-4]
             self.lattice_data = pd.read_csv(lattice, header = 0, names = ['Element','f','x','y','z'])
             self.no_atoms = len(self.lattice_data.index)
             self.f, self.x, self.y, self.z = list(self.lattice_data.f), list(self.lattice_data.x), list(self.lattice_data.y), list(self.lattice_data.z)
@@ -42,7 +43,7 @@ class StructureFactorSimulation():
         l = self.miller_indices[2]
         total_amplitude = []
         total_phase = []
-        for a in range (0, len(no_atoms)):
+        for a in range (0, len(self.no_atoms)):
             amplitude = f[a]*np.cos(2*np.pi()*((h*x[a])*(k*y[a])*(l*z[a])))
             total_amplitude.append(amplitude)
             phase = f[a]* np.sin(2*np.pi()*((h*x[a])*(k*y[a])*(l*z[a])))
