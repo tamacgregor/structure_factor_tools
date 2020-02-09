@@ -64,7 +64,7 @@ setup(name='structure_factor_tools',
           'matplotlib',
           'h5py',
           'tqdm',
-          'hyperspy'
+          'hyperspy',
           'pandas',
       ],
       include_package_data=True,
