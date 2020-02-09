@@ -2,7 +2,7 @@
 
 #Import required modules:
 
-import numpy as np, math, os
+import numpy as np, math, os, pandas as pd
 
 class StructureFactorSimulation():
 
@@ -11,8 +11,11 @@ class StructureFactorSimulation():
         self.name = name
         self.miller_indices = [0,0,1]
         self.scattering_factor = 0
-        self.atoms = []
+        self.atoms = pd.DataFrame()
         self.atom_number = len(atom)
+
+    def getLatticeInfo(self):
+
 
     def calCalculateLatticeStructureFactor(self):
         '''Get the scructure factor for defined lattice. NB: By default the hkl values are set to  [001]'''
@@ -24,4 +27,5 @@ class StructureFactorSimulation():
             y = [1]
             z = [2]
             amplitude = np.cos(2*np.pi()*((h*x)))
-            phase =
+            phase = 'ui'
+        Returns
