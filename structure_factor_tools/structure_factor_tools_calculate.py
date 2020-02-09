@@ -36,20 +36,22 @@ class StructureFactorSimulation():
 
         return self.lattice_data
 
-    def calCalculateLatticeStructureFactor(self):
+    def calculateLatticeStructureFactor(self):
         '''Get the scructure factor for defined lattice. NB: By default the hkl values are set to  [001]'''
         h = self.miller_indices[0]
         k = self.miller_indices[1]
         l = self.miller_indices[2]
-        total_amplitude = []
-        total_phase = []
-        for a in range (0, len(self.no_atoms)):
-            amplitude = f[a]*np.cos(2*np.pi()*((h*x[a])*(k*y[a])*(l*z[a])))
-            total_amplitude.append(amplitude)
-            phase = f[a]* np.sin(2*np.pi()*((h*x[a])*(k*y[a])*(l*z[a])))
-            total_phase.append(phase)
-        total_phase = total_phase*1j
+        total_amplitude = 0
+        total_phase = 0
+        for a in range (0, self.no_atoms):
+            amplitude = self.f[a]*np.cos(2*np.pi*((h*self.x[a])+(k*self.y[a])+(l*self.z[a])))
+            total_amplitude = total_amplitude + amplitude
+            del(amplitude)
+            phase = self.f[a]* np.sin(2*np.pi*((h*self.x[a])+(k*self.y[a])+(l*self.z[a])))
+            total_phase = total_phase + phase
+            del(phase)
+        mod_structure_factor = np.sqrt(total_amplitude**2 + total_phase**2)
         self.total_amplitude, self.total_phase = total_amplitude, total_phase
-        self.structure_factor = self.total_amplitude + self.total_phase
+        self.structure_factor = mod_structure_factor
 
         return self.structure_factor
