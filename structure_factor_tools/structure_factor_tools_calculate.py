@@ -7,12 +7,12 @@ import numpy as np, os, pandas as pd
 class StructureFactorSimulation():
 
     def __init__(self, name, no_atoms):
-       ''' Constructor Function '''
+        ''' Constructor Function '''
         self.name = name
         self.miller_indices = [0,0,1]
         self.no_atoms = no_atoms
         self.lattice_data = pd.DataFrame()
-        self.f, self.x, self.y, self.z = [], [] ,[],[]
+        self.f, self.x, self.y, self.z = [],[],[],[]
         self.total_phase = 0
         self.total_amplitude = 0
         self.structure_factor = 0
@@ -25,7 +25,7 @@ class StructureFactorSimulation():
         Returns:
         lattice_data (pandas DataFrame)- DataFrame contain all the data, can read to ensure data has been input correctly.
         '''
-        if lattice[:-4] = '.csv':
+        if lattice[:-4] == '.csv':
             #Read .csv with pandas then store locations and atomic scattering factors in seperate arrays:
             self.lattice_data = pd.read_csv(lattice, header = 0, names = ['Element','f','x','y','z'])
             self.no_atoms = len(self.lattice_data.index)
