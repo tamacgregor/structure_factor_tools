@@ -55,3 +55,16 @@ class StructureFactorSimulation():
         self.structure_factor = mod_structure_factor
 
         return self.structure_factor
+
+    def changeCoordinates(self,row, x, y,z):
+        orginal_coordinates = [self.lattice_data.x[row],self.lattice_data.y[row],self.lattice_data.z[row]]
+        offset = [x,y,z]
+        new_positions = []
+        for i in range (0, len(orginal_coordinates)):
+            new_position = orginal_coordinates[i] + offset[i]
+            new_postions.append(new_position)
+            del(new_position)
+        print('Orginal coordinates were: ', orginal_coordinates, ' for ' , self.lattice_data.Element[row], ' in ' , self.name)
+
+        new_positions = self.x[row], self.y[row], self.z[row]
+        print("The new coordinates are: " , new_positions)
