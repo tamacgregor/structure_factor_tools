@@ -14,8 +14,14 @@ class StructureFactorSimulation():
         self.lattice_data = pd.DataFrame()
         self.f, self.x, self.y, self.z = [],[],[],[]
         self.total_phase = 0
+        self.total_amplitude_010 = 0
+        self.total_phase_010 = 0
+        self.total_amplitude_custom = 0
+        self.total_phase_custom = 0
         self.total_amplitude = 0
-        self.structure_factor = 0
+        self.mod_structure_factor = 0
+        self.mod_structure_factor_010 = 0
+        self.mod_structure_factor_custom = 0
 
     def getLatticeInfo(self, lattice):
         ''' Read unit cell data for the unit cell for be analysed from a .csv file.
@@ -52,9 +58,8 @@ class StructureFactorSimulation():
             del(phase)
         mod_structure_factor = np.sqrt(total_amplitude**2 + total_phase**2)
         self.total_amplitude, self.total_phase = total_amplitude, total_phase
-        self.structure_factor = mod_structure_factor
-
-        return self.structure_factor
+        self.mod_structure_factor = mod_structure_factor
+        return self.mod_structure_factor
 
     def changeCoordinates(self,row, x, y,z):
         orginal_coordinates = [self.lattice_data.x[row],self.lattice_data.y[row],self.lattice_data.z[row]]
@@ -68,3 +73,34 @@ class StructureFactorSimulation():
 
         new_positions = self.x[row], self.y[row], self.z[row]
         print("The new coordinates are: " , new_positions)
+
+    def calculateLatticeStructureFactor_010(self):
+        h,k,l = 0,1,0
+        total_amplitude = 0
+        total_phase = 0
+        for a in range (0, self.no_atoms):
+            amplitude = self.f[a]*np.cos(2*np.pi*((h*self.x[a])+(k*self.y[a])+(l*self.z[a])))
+            total_amplitude = total_amplitude + amplitude
+            del(amplitude)
+            phase = self.f[a]* np.sin(2*np.pi*((h*self.x[a])+(k*self.y[a])+(l*self.z[a])))
+            total_phase = total_phase + phase
+            del(phase)
+        mod_structure_factor_010 = np.sqrt(total_amplitude**2 + total_phase**2)
+        self.total_amplitude_010, self.total_phase_010 = total_amplitude, total_phase
+        self.mod_structure_factor_010 = mod_structure_factor_010
+        print('The strcuture factor about [010] is ' + self.mod_structure_factor_010)
+        return self.mod_structure_factor_010
+
+    def calculateLatticeStructureFactorCustomMillerIndicies(self,h,k,l):
+       total_amplitude = 0
+       total_phase = 0
+       for a in range (0, self.no_atoms):
+           amplitude = self.f[a]*np.cos(2*np.pi*((h*self.x[a])+(k*self.y[a])+(l*self.z[a])))
+           total_amplitude = total_amplitude + amplitude
+           del(amplitude)
+           phase = self.f[a]* np.sin(2*np.pi*((h*self.x[a])+(k*self.y[a])+(l*self.z[a])))
+           total_phase = total_phase + phase
+           del(phase)
+       mod_structure_factor_custom = np.sqrt(total_amplitude**2 + total_phase**2)
+       self.total_amplitude_custom, self.total_phase_custom = total_amplitude, total_phase
+       self.mod_structure_factor_custom = mod_structure_factor_custom
