@@ -70,8 +70,8 @@ class StructureFactorSimulation():
             new_positions.append(new_position)
             del(new_position)
         print('Orginal coordinates were: ', orginal_coordinates, ' for ' , self.lattice_data.Element[row], ' in ' , self.name)
-
-        new_positions = self.x[row], self.y[row], self.z[row]
+        self.lattice_data.replace({'x':{row:new_positions[0]}}, {'y':{row:new_positions[1]}}, {'z':{row:new_positions[2]}})
+        self.x[row], self.y[row], self.z[row] = new_positions
         print("The new coordinates are: " , new_positions)
 
     def calculateLatticeStructureFactor_010(self):
@@ -104,3 +104,4 @@ class StructureFactorSimulation():
        mod_structure_factor_custom = np.sqrt(total_amplitude**2 + total_phase**2)
        self.total_amplitude_custom, self.total_phase_custom = total_amplitude, total_phase
        self.mod_structure_factor_custom = mod_structure_factor_custom
+       return self.mod_structure_factor_custom
