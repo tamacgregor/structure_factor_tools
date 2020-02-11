@@ -67,7 +67,7 @@ class StructureFactorSimulation():
         new_positions = []
         for i in range (0, len(orginal_coordinates)):
             new_position = orginal_coordinates[i] + offset[i]
-            new_postions.append(new_position)
+            new_positions.append(new_position)
             del(new_position)
         print('Orginal coordinates were: ', orginal_coordinates, ' for ' , self.lattice_data.Element[row], ' in ' , self.name)
 
@@ -88,7 +88,7 @@ class StructureFactorSimulation():
         mod_structure_factor_010 = np.sqrt(total_amplitude**2 + total_phase**2)
         self.total_amplitude_010, self.total_phase_010 = total_amplitude, total_phase
         self.mod_structure_factor_010 = mod_structure_factor_010
-        print('The strcuture factor about [010] is ' + self.mod_structure_factor_010)
+        print('The structure factor about [010] is ' , self.mod_structure_factor_010)
         return self.mod_structure_factor_010
 
     def calculateLatticeStructureFactorCustomMillerIndicies(self,h,k,l):
