@@ -70,7 +70,7 @@ class StructureFactorSimulation():
             new_positions.append(new_position)
             del(new_position)
         print('Orginal coordinates were: ', orginal_coordinates, ' for ' , self.lattice_data.Element[row], ' in ' , self.name)
-        self.lattice_data.replace({'x':{row:new_positions[0]}}, {'y':{row:new_positions[1]}}, {'z':{row:new_positions[2]}})
+        self.lattice_data.replace({'x':{row:new_positions[0]}, 'y':{row:new_positions[1]}, 'z':{row:new_positions[2]}})
         self.x[row], self.y[row], self.z[row] = new_positions
         print("The new coordinates are: " , new_positions)
 
