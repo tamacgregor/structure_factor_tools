@@ -61,7 +61,7 @@ class StructureFactorSimulation():
         self.mod_structure_factor = mod_structure_factor
         return self.mod_structure_factor
 
-    def changeCoordinates(self,row, x, y,z):
+    def changeCoordinates(self,row, x, y,z, show_changes = True):
         orginal_coordinates = [self.lattice_data.x[row],self.lattice_data.y[row],self.lattice_data.z[row]]
         offset = [x,y,z]
         new_positions = []
@@ -69,10 +69,14 @@ class StructureFactorSimulation():
             new_position = orginal_coordinates[i] + offset[i]
             new_positions.append(new_position)
             del(new_position)
-        print('Orginal coordinates were: ', orginal_coordinates, ' for ' , self.lattice_data.Element[row], ' in ' , self.name)
         self.lattice_data.x[row], self.lattice_data.y[row], self.lattice_data.z[row] = new_positions[0], new_positions[1], new_positions[2]
         self.x[row], self.y[row], self.z[row] = new_positions
-        print("The new coordinates are: " , new_positions)
+
+        if show_changes = True:
+            print('Orginal coordinates were: ', orginal_coordinates, ' for ' , self.lattice_data.Element[row], ' in ' , self.name)
+            print("The new coordinates are: " , new_positions)
+        else:
+        return new_positions
 
     def calculateLatticeStructureFactor_010(self):
         h,k,l = 0,1,0

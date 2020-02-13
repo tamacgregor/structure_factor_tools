@@ -1,14 +1,29 @@
-#20200211 Tom Macgregor
+'''0200211 Tom Macgregor'''
 
-import numpy as np, os, pandas as pd
-from structure_factor_tools_calculate import StructureFactorSimulation
+import numpy as np, os, pandas as pd, pixstem.api as ps, scipy as sp
+import matplotlib.pylab as plt
+from structure_factor_tools.structure_factor_tools_calculate. import StructureFactorSimulation
 
-class StructureFactorAnalyser():
-    def __init__(self):
-        self.z_values = []
-        self.structure_factors = StructureFactorSimulation.calculateLatticeStructureFactor()
+class StructureFactorAnalyser(StructureFactorSimulation):
 
-    def compareStructureFactorsPlot(self, l1,l2):
-        '''Measure difference in structure factor w.r.t. the z position of atoms in a lattice then plot the results. '''
-        lattice_a =
-            
+    def __init__(self,lattice_file):
+        '''Constructor function'''
+        pass
+        StructureFactorSimulation.__init__(self)
+        self.lattice_data = StructureFactorSimulation.getLatticeInfo(lattice_file)
+        self.z_values = np.arange(5)
+        self.structure_factors = []
+
+    def compareStructureFactorsPlot(self,start,end,step,atom, show_progress = False ):
+        '''Measure structure factor w.r.t. the z position of atoms
+        in a lattice then plot the results. '''
+        self.z_values = np.arange(start,end,step)
+        sim = StructureFactorSimulation
+        for i in self.z_values:
+            new_positions = sim.changeCoordinates(self,row= atom, x = self.lattice_data.x,  y = self.lattice_data.y, z = i, show_changes = show_progress)
+            new_structure_factor = sim.calculateLatticeStructureFactor(self)
+            self.structure_factors.append(new_structure_factor)
+            del(new_structure_factor)
+        plt.plot(self.z_values, self.structure_factors)
+
+        return self.z_values, self.structure_factors
