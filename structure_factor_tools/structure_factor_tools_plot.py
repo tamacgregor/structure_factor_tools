@@ -2,6 +2,7 @@
 
 import numpy as np, os, pandas as pd, pixstem.api as ps, scipy as sp
 import matplotlib.pylab as plt
+from structure_factor_tools_calculate import StructureFactorSimulation
 
 class StructureFactorAnalyser(StructureFactorSimulation):
 
