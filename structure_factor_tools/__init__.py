@@ -26,6 +26,7 @@ if not _p3:
 
 __all__ = [
     'structure_factor_tools_calculate',
+    'structure_factor_tools_plot'
     ]
 
 
