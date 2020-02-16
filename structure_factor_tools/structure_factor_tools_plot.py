@@ -2,7 +2,7 @@
 
 import numpy as np, os, pandas as pd, pixstem.api as ps, scipy as sp
 import matplotlib.pylab as plt
-from structure_factor_tools_calculate import StructureFactorSimulation
+from structure_factor_tools.structure_factor_tools_calculate import StructureFactorSimulation
 
 class StructureFactorAnalyser(StructureFactorSimulation):
 
@@ -19,7 +19,7 @@ class StructureFactorAnalyser(StructureFactorSimulation):
         in a lattice then plot the results. '''
         self.z_values = np.arange(start,end,step)
         for i in range (0, len(self.z_values)):
-            new_positions = self.changeCoordinates(self,row= atom,
+            new_positions = self.changeCoordinates(self,row= atom)
              x = self.lattice_data.x,  y = self.lattice_data.y, z = self.z_values[i],
              show_changes = show_progress)
             new_structure_factor = self.calculateLatticeStructureFactor(self)
