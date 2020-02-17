@@ -19,12 +19,12 @@ class StructureFactorAnalyser(StructureFactorSimulation):
         in a lattice then plot the results.'''
         self.z_values = np.arange(start,end,step)
         for i in range (0, len(self.z_values)):
-            new_positions = self.changeCoordinates(self, row= atom, x = self.lattice_data.x[atom],  y = self.lattice_data.y[atom], z = i, show_changes = show_progress)
-            new_structure_factor = self.calculateLatticeStructureFactor(self)
+            new_positions = self.changeCoordinates( row= atom, x = self.lattice_data.x[0],  y = self.lattice_data.y[0], z = i, show_changes = show_progress)
+            new_structure_factor = self.calculateLatticeStructureFactor()
             self.structure_factors.append(new_structure_factor)
             del(new_structure_factor)
         plt.plot(self.z_values, self.structure_factors)
-        plt.sxlabel('z Postion (Fraction of Unit Cell)')
+        plt.xlabel('z Postion (Fraction of Unit Cell)')
         plt.ylabel('|$F_{hkl}$| (m$^{-1}$)')
         plt.savefig(self.name + '.png', dpi = 600)
         return self.z_values, self.structure_factors
