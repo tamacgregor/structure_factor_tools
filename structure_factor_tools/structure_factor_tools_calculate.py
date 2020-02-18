@@ -22,6 +22,9 @@ class StructureFactorSimulation():
         self.mod_structure_factor = 0
         self.mod_structure_factor_010 = 0
         self.mod_structure_factor_custom = 0
+        self.super_cell = pd.DataFrame()
+        self.d_spacing = 0
+
 
     def getLatticeInfo(self, lattice):
         ''' Read unit cell data for the unit cell for be analysed from a .csv file.
@@ -110,3 +113,14 @@ class StructureFactorSimulation():
        self.total_amplitude_custom, self.total_phase_custom = total_amplitude, total_phase
        self.mod_structure_factor_custom = mod_structure_factor_custom
        return self.mod_structure_factor_custom
+
+    def getSuperCell(self, scaleing):
+        unit_cell = self.lattice_data
+        super_cell = unit_cell
+        for i in range (1, scaleing-1):
+            super_cell = super_cell.append(self.lattice_data, ignore_index=False)
+        self.super_cell = super_cell
+        return self.super_cell
+
+
+    def getDspacing(self, theta, lamda):
