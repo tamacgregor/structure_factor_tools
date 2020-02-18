@@ -24,22 +24,31 @@ class StructureFactorSimulation():
         self.mod_structure_factor_custom = 0
         self.super_cell = pd.DataFrame()
         self.d_spacing = 0
+        self.scaling = 0
+        self.u = 0
+        self.v = 0
+        self.w = 0
+        self.c = 0
+        self.h_range = []
+        self.k_range = []
+        self.l = 0
+        self.mod_structure_factors = []
 
-
-    def getLatticeInfo(self, lattice):
+    def getLatticeInfo(self, lattice, c):
         ''' Read unit cell data for the unit cell for be analysed from a .csv file.
         Inputs:
         lattice (str)- .csv containg atomic scattering factors and position of each atom in the unit cell.
-
+        c (int)- lattice parameter
         Returns:
         lattice_data (pandas DataFrame)- DataFrame contain all the data, can read to ensure data has been input correctly.
         '''
+        self.c = c
         if lattice[-4:] == '.csv':
             #Read .csv with pandas then store locations and atomic scattering factors in seperate arrays:
             self.name = lattice[:-4]
             self.lattice_data = pd.read_csv(lattice, header = 0, names = ['Element','f','x','y','z'])
             self.no_atoms = len(self.lattice_data.index)
-            self.f, self.x, self.y, self.z = list(self.lattice_data.f), list(self.lattice_data.x), list(self.lattice_data.y), list(self.lattice_data.z)
+            self.f, self.x, self.y, self.z, = list(self.lattice_data.f), list(self.lattice_data.x), list(self.lattice_data.y), list(self.lattice_data.z)
         else:
             print('Error: Lattice Data must be a .csv file.')
 
@@ -64,15 +73,14 @@ class StructureFactorSimulation():
         self.mod_structure_factor = mod_structure_factor
         return self.mod_structure_factor
 
-    def changeCoordinates(self,row, x, y,z, show_changes = False):
-        orginal_coordinates = [self.lattice_data.x[row],self.lattice_data.y[row],self.lattice_data.z[row]]
-        offset = [x,y,z]
+    def changeCoordinates(self,row, x,y,z, show_changes = False):
+        new_coordinates = [x,y,z]
         new_positions = []
-        for i in range (0, len(orginal_coordinates)):
-            new_position = orginal_coordinates[i] + offset[i]
+        for i in range (0, len(new_coordinates)):
+            new_position = new_coordinates[i]
             new_positions.append(new_position)
             del(new_position)
-        self.lattice_data.x[row], self.lattice_data.y[row], self.lattice_data.z[row] = new_positions[0], new_positions[1], new_positions[2]
+        self.super_cell.x[row], self.super_cell.y[row], self.super_cell.z[row] = new_positions[0], new_positions[1], new_positions[2]
         self.x[row], self.y[row], self.z[row] = new_positions
 
         if show_changes == True:
@@ -114,13 +122,55 @@ class StructureFactorSimulation():
        self.mod_structure_factor_custom = mod_structure_factor_custom
        return self.mod_structure_factor_custom
 
-    def getSuperCell(self, scaleing):
+    def buildSuperCell(self, scaleing):
         unit_cell = self.lattice_data
+        self.scaling = scaleing
         super_cell = unit_cell
-        for i in range (1, scaleing-1):
+        for i in range (1, scaleing):
             super_cell = super_cell.append(self.lattice_data, ignore_index=False)
         self.super_cell = super_cell
+        self.f, self.x, self.y, self.z, = list(self.super_cell.f), list(self.super_cell.x), list(self.super_cell.y), list(self.super_cell.z)
         return self.super_cell
 
+    def getDSpacing(self,theta,lamda,n):
+        self.d_spacing = (n*lamda)/(2*(np.sin(theta)))
+        return self.d_spacing
 
-    def getDspacing(self, theta, lamda):
+    def findHK0(self, k_range):
+        self.l = 1 #when looking for FOLZ
+        self.k_range = k_range
+        sum_squared = (self.c**2)/(self.d_spacing**2)
+        hk_squared = sum_squared - 1
+        for i in range (0, len(k_range)):
+            self.k = k_range[i]
+            h = np.sqrt(hk_squared - self.k**2)
+            h = int(round(h))
+            self.h_range.append(h)
+            del(h)
+        return self.h_range, self.k_range
+
+    def getPossibleStructureFactors(self):
+        possible_structure_factors = np.array(0)
+        for i in range(0, len(self.h_range)):
+            k,k,l = self.h_range[i], self.k_range[i], 1
+            structure_factor = self.calculateLatticeStructureFactor()
+            possible_structure_factors.append(structure_factor)
+            del(structure_factor)
+        self.mod_structure_factors = possible_structure_factors
+        return self.mod_structure_factors
+
+    def displaceAtomsInSuperCell(self, atom, x,y,z):
+        repeat = len(self.super_cell)/self.no_atoms
+        new_positions = []
+        for i in range (0, int(repeat)):
+           new_position1 = self.changeCoordinates(row =atom, x=x, y=y, z=z)
+           new_positions.append(new_position1)
+           del(new_position1)
+           atom = atom + self.no_atoms
+           new_position2= self.changeCoordinates(row=atom, x= -1*x, y=-1*y, z = -1*z)
+           new_positions.append(new_position2)
+           del(new_position2)
+           atom = atom + self.no_atoms
+        new_positions = np.array(new_positions)
+
+        return self.super_cell

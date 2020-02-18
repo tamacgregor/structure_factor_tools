@@ -10,7 +10,6 @@ class StructureFactorAnalyser(StructureFactorSimulation):
         '''Constructor function'''
         pass
         StructureFactorSimulation.__init__(self, name, no_atoms)
-        self.lattice_data = StructureFactorSimulation.getLatticeInfo(self,lattice= lattice_file)
         self.z_values = np.arange(5)
         self.structure_factors = []
 
