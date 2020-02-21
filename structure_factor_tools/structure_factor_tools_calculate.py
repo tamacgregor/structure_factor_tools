@@ -133,7 +133,9 @@ class StructureFactorSimulation():
         return self.super_cell
 
     def getDSpacing(self,theta,lamda,n):
-        self.d_spacing = (n*lamda)/(2*(np.sin(theta)))
+        '''Calulate the d-spacing from a known wavelength and Bragg angle (in degrees)
+         using Bragg's law. '''
+        self.d_spacing = (n*lamda)/(2*(np.sin(np.deg2rad(theta)))
         return self.d_spacing
 
     def findHK0(self, k_range):
@@ -163,14 +165,13 @@ class StructureFactorSimulation():
         repeat = len(self.super_cell)/self.no_atoms
         new_positions = []
         for i in range (0, int(repeat)):
-           new_position1 = self.changeCoordinates(row =atom, x=x, y=y, z=z)
+           new_position1 = self.changeCoordinates(row =atom, x=x, y=y, z=z, show_changes = False)
            new_positions.append(new_position1)
            del(new_position1)
            atom = atom + self.no_atoms
-           new_position2= self.changeCoordinates(row=atom, x= -1*x, y=-1*y, z = -1*z)
+           new_position2= self.changeCoordinates(row=atom, x= -1*x, y=-1*y, z = -1*z, show_changes = False)
            new_positions.append(new_position2)
            del(new_position2)
            atom = atom + self.no_atoms
         new_positions = np.array(new_positions)
-
         return self.super_cell

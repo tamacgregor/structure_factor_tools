@@ -23,7 +23,7 @@ class StructureFactorAnalyser(StructureFactorSimulation):
             self.structure_factors.append(new_structure_factor)
             del(new_structure_factor)
         plt.plot(self.z_values, self.structure_factors)
-        plt.xlabel('$z$ Position (Fraction of Unit Cell)')
+        plt.xlabel('$z$ Position (Fraction of the Unit Cell)')
         plt.ylabel('|$F_{hkl}$| (m$^{-1}$)')
         plt.savefig(self.name + '.png', dpi = 600)
         #Save data in a NumPY array:
