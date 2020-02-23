@@ -36,7 +36,7 @@ class StructureFactorSimulation():
         self.lamda = 0
         self.h_001, self.h_110, self.h_111 = 0,0 0
         self.g_001, self.g_001, self.g_111 = 0,0,0
-        self.FOLZ_radii, self.SOLZ_radii, self.TOLZ_radii, [], [],[]
+        self.FOLZ_radii, self.SOLZ_radii, self.TOLZ_radii = [], [],[]
 
     def getLatticeInfo(self, lattice, c):
         ''' Read unit cell data for the unit cell for be analysed from a .csv file.
