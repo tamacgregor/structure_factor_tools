@@ -23,19 +23,16 @@ class StructureFactorSimulation():
         self.mod_structure_factor_010 = 0
         self.mod_structure_factor_custom = 0
         self.super_cell = pd.DataFrame()
-        self.spacing_110 = 0
-        self.spacing_001 = 0
-        self.spacing_111 = 0
+        self.spacing_110, self.spacing_001, self.spacing_111 = 0,0,0
         self.scaling = 0
         self.u, self.v, self.w = 0,0 ,0
-        self.h_range = []
-        self.k_range = []
+        self.h_range, self.k_range = [],[]
         self.l = 0
         self.mod_structure_factors = []
         self.theta_001, self.theta_110, self.theta_111 = 0,0, 0
         self.lamda = 0
         self.h_001, self.h_110, self.h_111 = 0,0 0
-        self.g_001, self.g_001, self.g_111 = 0,0,0
+        self.g_001, self.g_110, self.g_111 = 0,0,0
         self.FOLZ_radii, self.SOLZ_radii, self.TOLZ_radii = [], [],[]
 
     def getLatticeInfo(self, lattice, c):
