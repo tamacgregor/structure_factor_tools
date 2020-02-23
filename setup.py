@@ -66,6 +66,7 @@ setup(name='structure_factor_tools',
           'tqdm',
           'hyperspy',
           'pandas',
+          'fpd'
       ],
       include_package_data=True,
       zip_safe=True)

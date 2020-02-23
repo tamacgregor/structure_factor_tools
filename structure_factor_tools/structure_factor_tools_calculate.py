@@ -23,16 +23,20 @@ class StructureFactorSimulation():
         self.mod_structure_factor_010 = 0
         self.mod_structure_factor_custom = 0
         self.super_cell = pd.DataFrame()
-        self.d_spacing = 0
+        self.spacing_110 = 0
+        self.spacing_001 = 0
+        self.spacing_111 = 0
         self.scaling = 0
-        self.u = 0
-        self.v = 0
-        self.w = 0
-        self.c = 0
+        self.u, self.v, self.w = 0,0 ,0
         self.h_range = []
         self.k_range = []
         self.l = 0
         self.mod_structure_factors = []
+        self.theta_001, self.theta_110, self.theta_111 = 0,0, 0
+        self.lamda = 0
+        self.h_001, self.h_110, self.h_111 = 0,0 0
+        self.g_001, self.g_001, self.g_111 = 0,0,0
+        self.FOLZ_radii, self.SOLZ_radii, self.TOLZ_radii, [], [],[]
 
     def getLatticeInfo(self, lattice, c):
         ''' Read unit cell data for the unit cell for be analysed from a .csv file.
@@ -132,13 +136,62 @@ class StructureFactorSimulation():
         self.f, self.x, self.y, self.z, = list(self.super_cell.f), list(self.super_cell.x), list(self.super_cell.y), list(self.super_cell.z)
         return self.super_cell
 
-    def getDSpacing(self,theta,lamda,n):
-        '''Calulate the d-spacing from a known wavelength and Bragg angle (in degrees)
-         using Bragg's law. '''
-        self.d_spacing = (n*lamda)/(2*(np.sin(np.deg2rad(theta)))
-        return self.d_spacing
+    def getSpacings(self,d):
+        '''Calculate the plane dspacing for [110], [001] and [111] for defined lattice paramer. '''
+        self.d = d
+        self.spacing_110 = a*np.sqrt(2)
+        self.spacing_001 = a
+        self.spacing_111 = a*np.sqrt(3)
+        return self.spacing_110, self.spacing_001, self.spacing_111
 
-    def findHK0(self, k_range):
+    def getThetaValues(self,lamda):
+        '''  '''
+        self.lamda = lamda
+        self.theta_110 = np.arcsin(np.sqrt(lamda/self.spacing_110/2))
+        self.theta_001 = np.arcsin(np.sqrt(lamda/self.spacing_001/2))
+        self.theta_111 = np.arcsin(np.sqrt(lamda/self.spacing_111/2))
+        return self.theta_110, self.theta_001, self.theta_111
+
+    def getHValues(self):
+        self.h_110 = 2*np.pi()/self.spacing_110
+        self.h_001 = 2*np.pi()/self.spacing_001
+        self.h_111 = 2*np.pi()/self.spacing_111
+        return self.h_001, self.h_110, self.h_111
+
+    def getGValues(self):
+        self.g_110 = np.sqrt(2*np.pi()*2*self.h_110/self.lamda)
+        self.g_001 = np.sqrt(2*np.pi()*2*self.h_001/self.lamda)
+        self.g_111 = np.sqrt(2*np.pi()*2*self.h_111/self.lamda)
+        return self.g_001, self.g_110, self.g_111
+
+    def getHOLZRadaii(self):
+
+        #Calculate Radaii for first three Laue zones for [110], [001] and [111]:
+        folz_110 = self.theta_110*2000
+        solz_110 = np.sqrt(2)*folz_110
+        tolz_110 = np.sqrt(3)* folz_110
+        folz_001= self.theta_001*2000
+        solz_001 = np.sqrt(2)*folz_110
+        tolz_001 = np.sqrt(3)* folz_110
+        folz_111= self.theta_111*2000
+        solz_111 = np.sqrt(2)*folz_110
+        tolz_111 = np.sqrt(3)* folz_110
+
+        #Store values in arrays:
+        self.FOLZ_radii.append(folz_110)
+        self.FOLZ_radii.append(folz_001)
+        self.FOLZ_radii.append(folz_111)
+
+        self.SOLZ_radii.append(solz_110)
+        self.SOLZ_radii.append(solz_001)
+        self.SOLZ_radii.append(solz_111)
+
+        self.TOLZ_radii.append(tolz_110)
+        self.TOLZ_radii.append(tolz_001)
+        self.TOLZ_radii.append(tolz_111)
+        return self.FOLZ_radii, self.SOLZ_radii, self.TOLZ_radii
+
+    def findHK0(self,k_range):
         self.l = 1 #when looking for FOLZ
         self.k_range = k_range
         sum_squared = (self.c**2)/(self.d_spacing**2)
