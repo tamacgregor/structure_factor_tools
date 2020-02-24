@@ -149,7 +149,10 @@ class StructureFactorSimulation():
         return self.super_cell
 
     def getSpacings(self,d):
-        '''Calculate the plane dspacing for [110], [001] and [111] for defined lattice paramer. '''
+        '''Calculate the lattice spacing for [110], [001] and [111] for defined
+        lattice paramer.
+        Inputs:
+        d (int)- the recorded spacing between the  '''
         self.d = d
         self.spacing_110 = d*np.sqrt(2)
         self.spacing_001 = d
@@ -157,7 +160,8 @@ class StructureFactorSimulation():
         return self.spacing_110, self.spacing_001, self.spacing_111
 
     def getThetaValues(self,lamda):
-        '''Calculate the angular   '''
+        '''Calculate the refraction angle for 110, 001 and 111 atomic planes of
+          '''
         self.lamda = lamda
         self.theta_110 = np.arcsin(np.sqrt(lamda/self.spacing_110/2))
         self.theta_001 = np.arcsin(np.sqrt(lamda/self.spacing_001/2))
