@@ -123,13 +123,14 @@ class StructureFactorSimulation():
        self.mod_structure_factor_custom = mod_structure_factor_custom
        return self.mod_structure_factor_custom
 
-    def buildSuperCell(self, scaleing):
+    def buildSuperCell(self, scaleing = [1,1,1]):
         unit_cell = self.lattice_data
         self.scaling = scaleing
         super_cell = unit_cell
-        for i in range (1, scaleing):
-            super_cell = super_cell.append(self.lattice_data, ignore_index=False)
-        self.super_cell = super_cell
+        self.lattice_data.h = self.lattice_data.h/h*self.scaleing[0]
+        self.lattice_data.k = self.lattice_data.k*self.scaleing[1]
+        self.lattice_data.l = self.lattice_data.l*self.scaleing[2]
+
         self.f, self.x, self.y, self.z, = list(self.super_cell.f), list(self.super_cell.x), list(self.super_cell.y), list(self.super_cell.z)
         return self.super_cell
 
