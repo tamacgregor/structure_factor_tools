@@ -6,12 +6,12 @@ import numpy as np, os, pandas as pd
 
 class StructureFactorSimulation():
 
-    def __init__(self, name, no_atoms):
+    def __init__(self, name, no_atoms, lattice_data, hkl):
         ''' Constructor Function '''
         self.name = name
         self.miller_indices = [0,0,1]
         self.no_atoms = no_atoms
-        self.lattice_data = pd.DataFrame()
+        self.lattice_data =  pd.read_csv(lattice_data, header = 0, names = ['Element','f','x','y','z'])
         self.f, self.x, self.y, self.z = [],[],[],[]
         self.total_phase = 0
         self.total_amplitude_010 = 0
@@ -27,7 +27,7 @@ class StructureFactorSimulation():
         self.scaling = 0
         self.u, self.v, self.w = 0,0 ,0
         self.h_range, self.k_range = [],[]
-        self.l = 0
+        self.h, self.k. self.l = hkl[0], hkl[1], hkl[2]
         self.mod_structure_factors = []
         self.theta_001, self.theta_110, self.theta_111 = 0,0, 0
         self.lamda = 0
@@ -123,15 +123,24 @@ class StructureFactorSimulation():
        self.mod_structure_factor_custom = mod_structure_factor_custom
        return self.mod_structure_factor_custom
 
-    def buildSuperCell(self, scaleing = [1,1,1]):
-        unit_cell = self.lattice_data
-        self.scaling = scaleing
-        super_cell = unit_cell
-        self.lattice_data.h = self.lattice_data.h/h*self.scaleing[0]
-        self.lattice_data.k = self.lattice_data.k*self.scaleing[1]
-        self.lattice_data.l = self.lattice_data.l*self.scaleing[2]
+    def buildSupercell(self, scaleing = [1,1,1]):
+        '''Scale the Millar indices to produce a supercell of the requried
+        dimensions.
 
-        self.f, self.x, self.y, self.z, = list(self.super_cell.f), list(self.super_cell.x), list(self.super_cell.y), list(self.super_cell.z)
+        Inputs:
+        scaleing (3*1 array)- scalleing factor to used for x, y and z direction
+         i.e. [1,1,2] for 1x1x2 supercell
+
+        Returns:
+
+        '''
+        #
+        self.scaling = scaleing
+        self.super_cell.lattice_data.h = self.lattice_data.h*self.scaleing[0]
+        self.super_cell.lattice_data.k = self.lattice_data.k*self.scaleing[1]
+        self.super_cell.attice_data.l = self.lattice_data.l*self.scaleing[2]
+
+
         return self.super_cell
 
     def getSpacings(self,d):
