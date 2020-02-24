@@ -26,7 +26,7 @@ class StructureFactorSimulation():
         self.spacing_110, self.spacing_001, self.spacing_111 = 0,0,0
         self.scaling = 0
         self.u, self.v, self.w = 0,0 ,0
-        self.h_range, self.k_range = [],[]
+        self.h_values, self.k_values, self.l_values = [],[],[]
         self.h, self.k. self.l = hkl[0], hkl[1], hkl[2]
         self.mod_structure_factors = []
         self.theta_001, self.theta_110, self.theta_111 = 0,0, 0
@@ -123,36 +123,41 @@ class StructureFactorSimulation():
        self.mod_structure_factor_custom = mod_structure_factor_custom
        return self.mod_structure_factor_custom
 
-    def buildSupercell(self, scaleing = [1,1,1]):
-        '''Scale the Millar indices to produce a supercell of the requried
+    def buildSupercell(self,constants = [0,0,0], scaleing = [1,1,2], h_values, k_values, l_values ):
+        '''Scale the Miller indices to produce a supercell of the requried
         dimensions.
 
         Inputs:
-        scaleing (3*1 array)- scalleing factor to used for x, y and z direction
-         i.e. [1,1,2] for 1x1x2 supercell
-
+        constants (3*1 array)-  and user value to the the hkl values prior to
+        scaling i.e [0,0,1] to increase l by 1 etc..
+        scaleing (3*1 array)- scaleing factor to used for the Miller indices.
+         i.e. [1,1,2] for 1x1x2 supercell etc..
         Returns:
-
+        self.supercell (Dataframe)- New dataframe storing hkl for the new
+        supercell.
         '''
-        #
+        #Apply Scaling to the defined Miller indices, then store values in arrays:
         self.scaling = scaleing
-        self.super_cell.lattice_data.h = self.lattice_data.h*self.scaleing[0]
-        self.super_cell.lattice_data.k = self.lattice_data.k*self.scaleing[1]
-        self.super_cell.attice_data.l = self.lattice_data.l*self.scaleing[2]
+        for i in h_values:
+            #  Add constants to meet Laue Conditions:
+            h_values[i], k_values[i], l_values[i] = h_values[i] + constants[0], k_values[i] + constants[1], k_values[i] + constants[2]
+            self.h_values[i], self.k_values[i], self.l_values[i] = h_values[i]*self.scaleing[0], k_values[i]*self.scaling[1], l_values[i]*self.scaling[2]
 
-
+        #Store Supercell in DataFrame:
+        super_cell_data = {'h':self.h_values, 'k':self.k_values, 'l':self.l_values}
+        self.supercell= pd.DataFrame.from_dict(super_cell_data)
         return self.super_cell
 
     def getSpacings(self,d):
         '''Calculate the plane dspacing for [110], [001] and [111] for defined lattice paramer. '''
         self.d = d
-        self.spacing_110 = a*np.sqrt(2)
-        self.spacing_001 = a
-        self.spacing_111 = a*np.sqrt(3)
+        self.spacing_110 = d*np.sqrt(2)
+        self.spacing_001 = d
+        self.spacing_111 = d*np.sqrt(3)
         return self.spacing_110, self.spacing_001, self.spacing_111
 
     def getThetaValues(self,lamda):
-        '''  '''
+        '''Calculate the angular   '''
         self.lamda = lamda
         self.theta_110 = np.arcsin(np.sqrt(lamda/self.spacing_110/2))
         self.theta_001 = np.arcsin(np.sqrt(lamda/self.spacing_001/2))
@@ -185,14 +190,18 @@ class StructureFactorSimulation():
         tolz_111 = np.sqrt(3)* folz_110
 
         #Store values in arrays:
+
+        #For first order:
         self.FOLZ_radii.append(folz_110)
         self.FOLZ_radii.append(folz_001)
         self.FOLZ_radii.append(folz_111)
 
+        #Second Order:
         self.SOLZ_radii.append(solz_110)
         self.SOLZ_radii.append(solz_001)
         self.SOLZ_radii.append(solz_111)
 
+        #Third Order:
         self.TOLZ_radii.append(tolz_110)
         self.TOLZ_radii.append(tolz_001)
         self.TOLZ_radii.append(tolz_111)
