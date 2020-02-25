@@ -169,20 +169,25 @@ class StructureFactorSimulation():
         return self.theta_110, self.theta_001, self.theta_111
 
     def getHValues(self):
+        '''Get the H values from the caluclated d-spacing of the persovkite
+        specimen. '''
         self.h_110 = 2*np.pi()/self.spacing_110
         self.h_001 = 2*np.pi()/self.spacing_001
         self.h_111 = 2*np.pi()/self.spacing_111
         return self.h_001, self.h_110, self.h_111
 
     def getGValues(self):
+        '''Get the G values from the caluclated d-spacing of the persovkite
+        specimen. '''
         self.g_110 = np.sqrt(2*np.pi()*2*self.h_110/self.lamda)
         self.g_001 = np.sqrt(2*np.pi()*2*self.h_001/self.lamda)
         self.g_111 = np.sqrt(2*np.pi()*2*self.h_111/self.lamda)
         return self.g_001, self.g_110, self.g_111
 
     def getHOLZRadaii(self):
-
-        #Calculate Radaii for first three Laue zones for [110], [001] and [111]:
+        '''Predict the radii (in mrad) of the first three higher order Laue
+        zones then store these values in an array.'''
+        #Calculate Radaii (mrad) for first three Laue zones for [110], [001] and [111]:
         folz_110 = self.theta_110*2000
         solz_110 = np.sqrt(2)*folz_110
         tolz_110 = np.sqrt(3)* folz_110
