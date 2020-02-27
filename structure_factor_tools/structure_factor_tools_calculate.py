@@ -134,6 +134,7 @@ class StructureFactorSimulation():
         scaling i.e [0,0,1] to increase l by 1 etc..
         scaleing (3*1 array)- scaleing factor to used for the Miller indices.
          i.e. [1,1,2] for 1x1x2 supercell etc..
+
         Returns:
         self.supercell (Dataframe)- New dataframe storing hkl for the new
         supercell.
@@ -178,8 +179,11 @@ class StructureFactorSimulation():
 
         Inputs:
         lamda = realvistic electron wavelenth (nm)
-        Returns:
 
+        Returns:
+        self.theta_110 (float) - refraction angle (Angstroms) along (110)
+        self.theta_001 (float) - refraction angle(Angstroms) along (001)
+        self.theta_111 (float) - refraction angle (Angstroms) along (111)
 
           '''
         self.lamda = lamda
@@ -190,21 +194,34 @@ class StructureFactorSimulation():
 
     def getHValues(self):
         '''Get the H (Reciprocial lattice plane spacing) values from the calculated df the persovkite
-        specimen. '''
+        specimen.
+
+        Inputs:
+        None - uses atom spacings previously stored in the class.
+
+        Returns:
+        self.h_110 (float) - refraction angle (Angstroms^-1) along (110)
+        self.h_001 (float) - refraction angle (Angstroms^-1) along (001)
+        self.h_111 (float) - refraction angle (Angstroms^-1) along (111)   '''
+
         self.h_110 = 2*np.pi()/self.spacing_110
         self.h_001 = 2*np.pi()/self.spacing_001
         self.h_111 = 2*np.pi()/self.spacing_111
         return self.h_001, self.h_110, self.h_111
 
     def getGValues(self):
-        '''Get the G (Radius of the FOLZ) values from the calculated of the
+        '''Get the G- Radius of the FOLZ- values (Angstroms^-1) from the calculated of the
         perovskite
         specimen. Use these values to get an eqivalent d-spacing using the
         defined lattice parameter.
 
         Inputs:
+        None - use H values privously stored in the class.
 
         Returns:
+        self.g_110 (float) - G Value (Angstroms^-1) for (110)
+        self.g_001 (float) - G Value (Angstroms^-1) for (001)
+        self.g_111 (float) - G Value (Angstroms^-1) for (111)
 
         '''
 
@@ -213,7 +230,7 @@ class StructureFactorSimulation():
         self.g_001 = np.sqrt(2*np.pi()*2*self.h_001/self.lamda)
         self.g_111 = np.sqrt(2*np.pi()*2*self.h_111/self.lamda)
 
-        #Calculate and store the eqivalent d-spacings:
+        #Calculate and store the equivalent d-spacings:
         self.d_eqiv_110 = (2*np.pi())/selg.g_110
         self.d_eqiv_001 = (2*np.pi())/selg.g_001
         self.d_eqiv_111 = (2*np.pi())/selg.g_111
@@ -221,8 +238,19 @@ class StructureFactorSimulation():
         return self.g_001, self.g_110, self.g_111
 
     def getHOLZRadaii(self):
-        '''Predict the radii (in mrad) of the first three higher order Laue
-        zones then store these values in an array.'''
+        '''Predict the radii (mrad) of the first three higher order Laue
+        zones then store these values in an array.
+
+        Inputs:
+        None - uses refraction angles previously stored in the class.
+
+        Returns:
+        self.FOLZ_radii(1*3 array) - FOLZ radii (mrad) along (110),(001) and (111)
+        self.SOLZ_radii(1*3 array) - SOLZ radii (mrad) along (110),(001) and (111)
+        self.TOLZ_radii(1*3 array) - TOLZ radii (mrad) along (110),(001) and (111)
+        '''
+
+
         #Calculate Radaii (mrad) for first three Laue zones for (110), (001) and (111):
 
         #(110):
