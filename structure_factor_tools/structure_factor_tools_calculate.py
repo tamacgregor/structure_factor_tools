@@ -35,7 +35,7 @@ class StructureFactorSimulation():
         self.g_001, self.g_110, self.g_111 = 0,0,0
         self.FOLZ_radii, self.SOLZ_radii, self.TOLZ_radii = [], [],[]
         self.a = a
-        self.d_eqiv_110, self.d_eqiv_001, self.d_eqiv_111 = 0,0,0 
+        self.d_eqiv_110, self.d_eqiv_001, self.d_eqiv_111 = 0,0,0
 
     def getLatticeInfo(self, lattice, c):
         ''' Read unit cell data for the unit cell for be analysed from a .csv file.
@@ -154,10 +154,14 @@ class StructureFactorSimulation():
         '''Calculate the lattice spacing for [110], [001] and [111] for defined
         lattice parameter.
         Inputs:
-        a (int)- the recorded spacing between indential atom along the defined
+        a (float)- the recorded spacing (Angstroms) between indential atom along the defined
         viewing direction
 
         Returns:
+        self.spacing_110 (float) - spacing (Angstroms) along (110)
+        self.spacing_001 (float) - spacing (Angstroms) along (001)
+        self.spacing_111 (float) - spacing (Angstroms) along (111)
+
           '''
 
         #Get the atomic spacings:
@@ -170,6 +174,13 @@ class StructureFactorSimulation():
 
     def getThetaValues(self,lamda):
         '''Calculate the refraction angle for 110, 001 and 111 atomic planes of
+        the perovskite system
+
+        Inputs:
+        lamda = realvistic electron wavelenth (nm)
+        Returns:
+
+
           '''
         self.lamda = lamda
         self.theta_110 = np.arcsin(np.sqrt(lamda/self.spacing_110/2))
