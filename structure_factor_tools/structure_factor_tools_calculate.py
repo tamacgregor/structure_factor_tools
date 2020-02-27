@@ -25,15 +25,17 @@ class StructureFactorSimulation():
         self.super_cell = pd.DataFrame()
         self.spacing_110, self.spacing_001, self.spacing_111 = 0,0,0
         self.scaling = 0
-        self.u, self.v, self.w = 0,0 ,0
+        self.u, self.v, self.w = 0,0,0
         self.h_values, self.k_values, self.l_values = [],[],[]
         self.h, self.k. self.l = hkl[0], hkl[1], hkl[2]
         self.mod_structure_factors = []
-        self.theta_001, self.theta_110, self.theta_111 = 0,0, 0
+        self.theta_001, self.theta_110, self.theta_111 = 0,0,0
         self.lamda = 0
-        self.h_001, self.h_110, self.h_111 = 0,0 0
+        self.h_001, self.h_110, self.h_111 = 0,0,0
         self.g_001, self.g_110, self.g_111 = 0,0,0
         self.FOLZ_radii, self.SOLZ_radii, self.TOLZ_radii = [], [],[]
+        self.a = a
+        self.d_eqiv_110, self.d_eqiv_001, self.d_eqiv_111 = 0,0,0 
 
     def getLatticeInfo(self, lattice, c):
         ''' Read unit cell data for the unit cell for be analysed from a .csv file.
@@ -123,7 +125,7 @@ class StructureFactorSimulation():
        self.mod_structure_factor_custom = mod_structure_factor_custom
        return self.mod_structure_factor_custom
 
-    def buildSupercell(self,constants = [0,0,0], scaleing = [1,1,2], h_values, k_values, l_values ):
+    def buildSupercell(self,constants = [0.5,0.5,0], scaleing = [1,1,2], h_values, k_values, l_values ):
         '''Scale the Miller indices to produce a supercell of the requried
         dimensions.
 
@@ -148,16 +150,23 @@ class StructureFactorSimulation():
         self.supercell= pd.DataFrame.from_dict(super_cell_data)
         return self.super_cell
 
-    def getSpacings(self,d):
+    def getSpacings(self,a):
         '''Calculate the lattice spacing for [110], [001] and [111] for defined
-        lattice paramer.
+        lattice parameter.
         Inputs:
-        d (int)- the recorded spacing between the  '''
-        self.d = d
-        self.spacing_110 = d*np.sqrt(2)
-        self.spacing_001 = d
-        self.spacing_111 = d*np.sqrt(3)
+        a (int)- the recorded spacing between indential atom along the defined
+        viewing direction
+
+        Returns:
+          '''
+
+        #Get the atomic spacings:
+        self.a = a
+        self.spacing_110 = a*np.sqrt(2)
+        self.spacing_001 = a
+        self.spacing_111 = a*np.sqrt(3)
         return self.spacing_110, self.spacing_001, self.spacing_111
+
 
     def getThetaValues(self,lamda):
         '''Calculate the refraction angle for 110, 001 and 111 atomic planes of
@@ -177,11 +186,27 @@ class StructureFactorSimulation():
         return self.h_001, self.h_110, self.h_111
 
     def getGValues(self):
-        '''Get the G (Radius of the FOLZ) values from the calculated of the persovkite
-        specimen. '''
+        '''Get the G (Radius of the FOLZ) values from the calculated of the
+        perovskite
+        specimen. Use these values to get an eqivalent d-spacing using the
+        defined lattice parameter.
+
+        Inputs:
+
+        Returns:
+
+        '''
+
+        #Find and store the G values:
         self.g_110 = np.sqrt(2*np.pi()*2*self.h_110/self.lamda)
         self.g_001 = np.sqrt(2*np.pi()*2*self.h_001/self.lamda)
         self.g_111 = np.sqrt(2*np.pi()*2*self.h_111/self.lamda)
+
+        #Calculate and store the eqivalent d-spacings:
+        self.d_eqiv_110 = (2*np.pi())/selg.g_110
+        self.d_eqiv_001 = (2*np.pi())/selg.g_001
+        self.d_eqiv_111 = (2*np.pi())/selg.g_111
+
         return self.g_001, self.g_110, self.g_111
 
     def getHOLZRadaii(self):
