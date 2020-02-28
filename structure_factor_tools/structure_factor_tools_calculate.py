@@ -36,6 +36,7 @@ class StructureFactorSimulation():
         self.FOLZ_radii, self.SOLZ_radii, self.TOLZ_radii = [], [],[]
         self.a = a
         self.d_eqiv_110, self.d_eqiv_001, self.d_eqiv_111 = 0,0,0
+        self.k_range, self.h_range = [],[]
 
     def getLatticeInfo(self, lattice, c):
         ''' Read unit cell data for the unit cell for be analysed from a .csv file.
