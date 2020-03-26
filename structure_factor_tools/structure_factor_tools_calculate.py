@@ -161,6 +161,8 @@ class StructureFactorSimulation():
 
     def getThetaValues(self,lamda):
         '''Calculate the refraction angle for 110, 001 and 111 atomic planes of
+        IN
+
           '''
         self.lamda = lamda
         self.theta_110 = np.arcsin(np.sqrt(lamda/self.spacing_110/2))
@@ -185,7 +187,7 @@ class StructureFactorSimulation():
         return self.g_001, self.g_110, self.g_111
 
     def getHOLZRadaii(self):
-        '''Predict the radii (in mrad) of the first three higher order Laue
+        '''Predict the angular dependant(in mrad) of the first three higher order Laue
         zones then store these values in an array.'''
         #Calculate Radaii (mrad) for first three Laue zones for (110), (001) and (111):
 
