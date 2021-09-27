@@ -171,7 +171,7 @@ class StructureFactorSimulation():
         return self.theta_110, self.theta_001, self.theta_111
 
     def getHValues(self):
-        '''Get the H (Reciprocial lattice plane spacing) values from the calculated df the persovkite
+        '''Get the H (Reciprocial lattice plane spacing) values using the known d-spacingsof  the persovkite
         specimen. '''
         self.h_110 = 2*np.pi()/self.spacing_110
         self.h_001 = 2*np.pi()/self.spacing_001
